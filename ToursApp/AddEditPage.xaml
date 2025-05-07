@@ -9,6 +9,58 @@
       Title="AddEditPage">
 
     <Grid>
-        <TextBlock Text="Hello!" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"></TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Название -->
+        <TextBlock Text="Название" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding Name}" 
+                 Grid.Column="1" 
+                 Margin="5" 
+                 Height="25" 
+                 VerticalAlignment="Center"
+                 MaxLength="100"/>
+
+        <!-- Количество звёзд -->
+        <TextBlock Text="Количество звёзд" Grid.Row="1" VerticalAlignment="Center" Margin="5"/>
+        <TextBox Text="{Binding CountOfStars}" 
+                 Grid.Row="1" 
+                 Grid.Column="1" 
+                 Width="175" 
+                 HorizontalAlignment="Left" 
+                 Margin="5" 
+                 Height="25" 
+                 VerticalAlignment="Center"/>
+
+        <!-- Страна -->
+        <TextBlock Text="Страна" Grid.Row="2" VerticalAlignment="Center" Margin="5"/>
+        <ComboBox SelectedItem="{Binding Country}"
+                  Grid.Row="2" 
+                  Grid.Column="1" 
+                  x:Name="ComboCountries" 
+                  DisplayMemberPath="Name"
+                  Margin="5" 
+                  Height="25" 
+                  VerticalAlignment="Center"/>
+
+        <!-- Кнопка Сохранить -->
+        <Button Content="Сохранить" 
+                Grid.Row="4" 
+                Grid.ColumnSpan="2" 
+                Name="BtnSave" 
+                Click="BtnSave_Click"
+                Width="100" 
+                Height="30" 
+                HorizontalAlignment="Center" 
+                Margin="5"/>
     </Grid>
 </Page>

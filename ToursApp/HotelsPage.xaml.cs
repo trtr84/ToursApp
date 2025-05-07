@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToursApp.Properties;
 
 namespace ToursApp
 {
@@ -23,11 +24,46 @@ namespace ToursApp
         public HotelsPage()
         {
             InitializeComponent();
+            DGridHotels.ItemsSource = ToursBaseEntities1.GetContext().Hotels.ToList();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Manager.MainFrame.Navigate(new AddEditPage());
+            Manager.MainFrame.Navigate(new AddEditPage((sender as Button).DataContext as Hotel));
+        }
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddEditPage(null));
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var hotelsForRemoving = DGridHotels.SelectedItems.Cast<Hotel>().ToList();
+
+            if (MessageBox.Show($"Вы точно хотите удалить следующие {hotelsForRemoving.Count()} элементов?", "Внимание",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes) {
+                try
+                {
+                    ToursBaseEntities1.GetContext().Hotels.RemoveRange(hotelsForRemoving);
+                    ToursBaseEntities1.GetContext().SaveChanges();
+                    MessageBox.Show("Данные удалены");
+
+                    DGridHotels.ItemsSource = ToursBaseEntities1.GetContext().Hotels.ToList();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
+            }
+        }
+
+        private void Page_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Visibility == Visibility.Visible)
+            {
+                ToursBaseEntities1.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                DGridHotels.ItemsSource = ToursBaseEntities1.GetContext().Hotels.ToList();
+            }
         }
     }
 }
